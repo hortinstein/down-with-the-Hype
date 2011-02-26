@@ -5,14 +5,14 @@ import time
 import string
 import sys
 import os.path
-import mutagen
+from mutagen.easyid3 import EasyID3 #utilize Mutagen for mp3 tag editing
 ##########################
 ##  ANDROID PROMPTS
 ##########################
 #import android
 #droid = android.Android() 
 #username = str(droid.getInput("please enter your hype machine user name", "") ).split('\'')[1] 
-
+songPath="/sdcard/Music/hypem/"
 ##########################
 ##  SHELL PROMPTS
 ##########################
@@ -20,6 +20,7 @@ if len(sys.argv) != 2:
   print "...usage: username"
   exit(1)
 username = sys.argv[1]
+songPath=""
 ##########################  
 
 loveDict = {}
@@ -47,7 +48,7 @@ def getLoved(songnum):
 print "...gathering " +username+ "'s Hype Machine Loved Songs" #
 songnum = getPage(1)[0].split("favorite songs\"><em>")[1].split("</em> <span>")[0]#
 print "..."+username+" has "+songnum+" favorite songs" 
-
+#songnum =1 #debug 
 #creates a database of all loved songs
 getLoved(songnum)
 
@@ -56,15 +57,17 @@ for songIds in loveDict.keys():
   print loveDict[songIds][1][1] + " - " + loveDict[songIds][2][1]
   if os.path.isfile("/sdcard/Music/hypem/"+mp3Name) == False:
 		try:
-			url = "http://hypem.com/serve/play/" + songIds + '/' + loveDict[songIds][0][1] + ".mp3"
-  			req2 = urllib2.Request(url)
-  			req2.add_header('cookie', loveDict[songIds][3])
-  			response = urllib2.urlopen(req2)
-			#grab the data
-  			data2 = response.read()
-  			song = open("/sdcard/Music/hypem/"+mp3Name, "wb")#hardcoded for convenience now
-  			song.write(data2)
-  			song.close()
-  			time.sleep(1)#sleep to prevent suspicions of scripting from teh hype machinesz
+		  url = "http://hypem.com/serve/play/" + songIds + '/' + loveDict[songIds][0][1] + ".mp3"
+		  req2 = urllib2.Request(url)
+		  req2.add_header('cookie', loveDict[songIds][3])
+		  response = urllib2.urlopen(req2)
+		  data2 = response.read()
+		  song = open(songPath+mp3Name, "wb")#hardcoded for convenience now
+		  song.write(data2)
+		  song.close()
+		  audio = EasyID3(songPath+ mp3Name )
+		  audio["album"]=u"The Hype Machine"
+		  audio.save()
+		  time.sleep(1)#sleep to prevent suspicions of scripting from teh hype machinesz
 		except urllib2.HTTPError, error:
 			print "...not available for download"
