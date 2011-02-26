@@ -5,7 +5,7 @@ import time
 import string
 import sys
 import os.path
-
+import mutagen
 ##########################
 ##  ANDROID PROMPTS
 ##########################
@@ -36,10 +36,10 @@ def getPage(pageNum):
 def getLoved(songnum):
   for i in range((int(songnum)/20)+1):
     page,cookie = getPage(i+1)
-    idMatches = re.findall("(?<=\tid:\')\w*(?=\')", page)#regular expression to locate the song id, used to generate the URL and as the index for the loved songs dictionary
-    keyMatches = re.findall("(?<=\tkey: \')\w*(?=\')", page)#used for the second part of the URL
-    songMatches= re.findall("(?<=\tsong:\').*(?=\')", page)
-    artistMatches= re.findall("(?<=\tartist:\').*(?=\')", page)
+    idMatches = re.findall("(?<=\tid:\')\w*(?=\')", page)       #regular expression to locate the song id, used to generate the URL and as the index for the loved songs dictionary
+    keyMatches = re.findall("(?<=\tkey: \')\w*(?=\')", page)    #used for the second part of the URL
+    songMatches= re.findall("(?<=\tsong:\').*(?=\')", page)     #stores song title for reference
+    artistMatches= re.findall("(?<=\tartist:\').*(?=\')", page) #store artist for reference
     for i in range(len(idMatches)):
       loveDict[idMatches[i]] = ( ("key",keyMatches[i]),("artist",artistMatches[i]),("song",(songMatches[i].replace('/',"")).replace('\\',"")), cookie )
 
@@ -62,10 +62,9 @@ for songIds in loveDict.keys():
   			response = urllib2.urlopen(req2)
 			#grab the data
   			data2 = response.read()
-  			song = open("/sdcard/Music/hypem/"+mp3Name, "wb")
+  			song = open("/sdcard/Music/hypem/"+mp3Name, "wb")#hardcoded for convenience now
   			song.write(data2)
   			song.close()
-			#if we make too many requests, they ban us. So lets sleep
-  			time.sleep(1)
+  			time.sleep(1)#sleep to prevent suspicions of scripting from teh hype machinesz
 		except urllib2.HTTPError, error:
 			print "...not available for download"
