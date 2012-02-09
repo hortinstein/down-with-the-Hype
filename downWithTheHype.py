@@ -4,6 +4,7 @@ import time
 import string
 import sys
 import os.path
+import time
 import mutagen
 from mutagen.easyid3 import EasyID3 #utilize Mutagen for mp3 tag editing
 ##########################
@@ -32,6 +33,7 @@ loveDict = {} #need to rename this...but really need to replace with a list of s
 #returns the HTML for a hype machine page where information can be extracted
 def getPage(pageNum):
   songNumReq = urllib2.Request('http://hypem.com/'+username+'/' + str(pageNum) + '/?ax=1&ts='+ str(time.time()) )
+  time.sleep(2)
   response = urllib2.urlopen(songNumReq)
   cookie = response.headers.get('Set-Cookie')#saves the cookie
   return response.read(),cookie #grab the HTML
@@ -51,7 +53,7 @@ def getLoved(songnum):
 print "...gathering " +username+ "'s Hype Machine Loved Songs" #
 songnum = getPage(1)[0].split("favorite songs\"><em>")[1].split("</em> <span>")[0]#
 print "..."+username+" has "+songnum+" favorite songs" 
-songnum =1 #debug 
+#songnum =1 #debug 
 #creates a database of all loved songs
 getLoved(songnum)
 
