@@ -41,7 +41,7 @@ def getPage(pageNum):
 
 #creates a database of loved songs in a dictionary
 def getLoved(songnum):
-  for i in range((int(songnum)/20)+1):
+  for i in range((int(songnum)/20)):
     page,cookie = getPage(i+1)
     
     idMatches = re.findall("\s+id:\s*\'(.+)\'", page)
