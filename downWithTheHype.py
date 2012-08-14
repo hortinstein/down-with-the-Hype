@@ -50,13 +50,14 @@ def getLoved(songnum):
     songMatches = re.findall("\s+song:\s*\'(.+)\'", page)
 
     artistMatches = re.findall("\s+artist:\s*\'(.+)\'", page)
-
+    print "songs found"+ len(idMatches)
     
     #idMatches = re.findall("(?<=\tid:\')\w*(?=\')", page)       #regular expression to locate the song id, used to generate the URL and as the index for the loved songs dictionary
     #keyMatches = re.findall("(?<=\tkey: \')\w*(?=\')", page)    #used for the second part of the URL
     #songMatches= re.findall("(?<=\tsong:\').*(?=\')", page)     #stores song title for reference
     #artistMatches= re.findall("(?<=\tartist:\').*(?=\')", page) #store artist for reference
     for i in range(len(idMatches)):
+      print i
       loveDict[idMatches[i]] = ( ("key",keyMatches[i]),("artist",artistMatches[i]),("song",(songMatches[i].replace('/',"")).replace('\\',"")), cookie )
 
 
