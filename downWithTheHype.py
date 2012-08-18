@@ -57,9 +57,10 @@ def getLoved(songnum):
     #songMatches= re.findall("(?<=\tsong:\').*(?=\')", page)     #stores song title for reference
     #artistMatches= re.findall("(?<=\tartist:\').*(?=\')", page) #store artist for reference
     for i in range(len(idMatches)):
-      print i
-      loveDict[idMatches[i]] = ( ("key",keyMatches[i]),("artist",artistMatches[i]),("song",(songMatches[i].replace('/',"")).replace('\\',"")), cookie )
-
+      try:
+      	loveDict[idMatches[i]] = ( ("key",keyMatches[i]),("artist",artistMatches[i]),("song",(songMatches[i].replace('/',"")).replace('\\',"")), cookie )
+      except:
+	print "error, all fields not found on a song"
 
 print "...gathering " +username+ "'s Hype Machine Loved Songs" #
 songnum = getPage(1)[0].split("favorite songs\"><em>")[1].split("</em> <span>")[0]#
